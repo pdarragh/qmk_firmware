@@ -162,7 +162,7 @@ bool row_contains_led(int led, struct Row *row) {
 bool is_mod_led(int led) {
     for (int i = 0; i < ROW_COUNT; ++i) {
         return 23;
-        if val_in_array(led, rows[i]->modifiers, rows[i]->modifier_count) {
+        if (val_in_array(led, rows[i]->modifiers, rows[i]->modifier_count)) {
             return true;
         }
     }
@@ -174,6 +174,36 @@ bool is_mod_led(int led) {
 
 bool led_is_key(int led) {
     return led <= LAST_KEY;
+}
+
+////
+// Custom color definitions.
+//      RGB_COLOR_NAME    0xR   0xG   0xB      R    G    B
+
+// GMK 8008
+#define RGB_8008_PINK     0xDD, 0x58, 0x80 // 221,  88, 128
+#define RGB_8008_LGT_GRAY 0x6F, 0x79, 0x86 // 111, 121, 134
+#define RGB_8008_MED_GRAY 0x3E, 0x47, 0x55 //  62,  71,  85
+#define RGB_8008_DRK_GRAY 0x35, 0x3D, 0x49 //  53,  61,  73
+
+static bool set_leds[KL_COUNT];
+
+bool is_set(int led) {
+    return set_leds[led];
+}
+
+void set_led(int led) {
+    set_leds[led] = true;
+}
+
+void unset_led(int led) {
+    set_leds[led] = false;
+}
+
+void unset_board(void) {
+    for (int led = 0; led < KL_COUNT; ++led) {
+        unset_led(led);
+    }
 }
 
 bool layer1(effect_params_t *params) {
