@@ -206,14 +206,33 @@ void unset_board(void) {
     }
 }
 
+void set_led_color(int led, uint8_t r, uint8_t g, uint8_t b) {
+    if (!is_set(led)) {
+        rgb_matrix_set_color(led, r, g, b);
+        set_led(led);
+    }
+}
+
+void set_board_color(uint8_t r, uint8_t g, uint8_t b) {
+    for (int i = 0; i < KL_COUNT; ++i) {
+        set_led_color(i, r, g, b);
+    }
+}
+
+void set_underglow_color(uint8_t r, uint8_t g, uint8_t b) {
+    for (int i = LAST_KEY + 1; i < KL_COUNT; ++i) {
+        set_led_color(i, r, g, b);
+    }
+}
+
 bool layer1(effect_params_t *params) {
     RGB_MATRIX_USE_LIMITS(led_min, led_max);
     for (int i = led_min; i <= led_max; ++i) {
         RGB_MATRIX_TEST_LED_FLAGS();
         if (led_is_key(i)) {
-            rgb_matrix_set_color(i, RGB_PINK);
+            set_led_color(i, RGB_PINK);
         } else {
-            rgb_matrix_set_color(i, RGB_WHITE);
+            set_led_color(i, RGB_WHITE);
         }
     }
     return led_max < DRIVER_LED_TOTAL;
